@@ -1,0 +1,23 @@
+#!/usr/bin/bash
+#
+#	dispdeco
+#   Script to test gcodes on a database file.
+while read code channel year month day startime duration rest
+do
+    echo -n $channel,$startime,$duration,$code
+    if [ $code -lt 1000000 ]
+    then
+	decode $day $month $year $code | \
+		sed -e 's/	//' | \
+		sed -e 's/Length=/,/' | \
+		sed -e 's/Channel=//' | \
+		sed -e 's/Start_time=//' | \
+		sed -e 's/End_time=//' | \
+		sed -e 's/ //' | \
+		sed -e 's/^/,/' | \
+		awk '{ printf $0 }'
+    else
+	echo -ne ",Sorry"
+    fi
+    echo
+done < $1
